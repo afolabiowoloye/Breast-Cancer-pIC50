@@ -1,12 +1,10 @@
 rdkit==2024.9.1
-streamlit
 streamlit-option-menu
-pandas
-seaborn
-plotly
-scikit-learn
 Pillow
-matplotlib
-numpy==2.2.1
-lightgbm==4.5.0
+requests==2.28.1
+scikit-learn==1.4.2
+catboost==1.2.5
+streamlit==1.27.2
+pandas==2.0.3
+numpy==1.26.4
 
