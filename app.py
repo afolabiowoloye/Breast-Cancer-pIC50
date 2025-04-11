@@ -105,7 +105,7 @@ if selected == "Select Target":
     if selected_target == "ER":
         @st.cache_resource
         def load_model():
-            MODEL_URL = "https://github.com/afolabiowoloye/catboost/raw/refs/heads/main/model/catboost_regression_model.cbm"
+            MODEL_URL = "https://github.com/afolabiowoloye/Breast-Cancer-pIC50/raw/refs/heads/main/models/AKT_catboost_regression_model.cbm"
             MODEL_PATH = "model.cbm"
     
             if not os.path.exists(MODEL_PATH):
