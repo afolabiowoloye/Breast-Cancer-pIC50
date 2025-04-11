@@ -77,7 +77,7 @@ if selected == "Home":
     #<strong>Reliable Predictions:</strong> Built on robust machine learning models trained on high-quality datasets, the app delivers reliable and actionable insights.<br>
     #<strong>Research-Ready:</strong> Designed to support drug discovery and molecular research, helping you identify promising compounds and optimize drug candidates.<br>
     
-    image2 = 'logo/workflow.png'
+    image2 = 'images/workflow.png'
     st.image(image2, use_container_width=True)
     
     with st.sidebar.header("""Overview and Usage"""):
