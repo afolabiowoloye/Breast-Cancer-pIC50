@@ -38,6 +38,12 @@ selected = option_menu(
 TARGET_MODELS = {
     'AKT': "https://github.com/afolabiowoloye/Breast-Cancer-pIC50/raw/main/models/AKT_catboost_regression_model.cbm",
     'ER': "https://github.com/afolabiowoloye/Breast-Cancer-pIC50/raw/main/models/ER_catboost_regression_model.cbm",
+    'ATM': "https://github.com/afolabiowoloye/Breast-Cancer-pIC50/raw/refs/heads/main/models/ATM_catboost_regression_model.cbm",
+    'CDK2': "https://github.com/afolabiowoloye/Breast-Cancer-pIC50/raw/refs/heads/main/models/CDK2_catboost_regression_model.cbm",
+    'CXCR4': "https://github.com/afolabiowoloye/Breast-Cancer-pIC50/raw/refs/heads/main/models/CXCR4_catboost_regression_model.cbm",
+    'FGFR': "https://github.com/afolabiowoloye/Breast-Cancer-pIC50/raw/refs/heads/main/models/FGFR_catboost_regression_model.cbm",
+    'VEGFR2': "https://github.com/afolabiowoloye/Breast-Cancer-pIC50/raw/refs/heads/main/models/VEGFR2_catboost_regression_model.cbm",
+    'braf': "https://github.com/afolabiowoloye/Breast-Cancer-pIC50/raw/refs/heads/main/models/braf_catboost_regression_model.cbm",
     # Add other targets here
 }
 
