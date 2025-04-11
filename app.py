@@ -146,18 +146,18 @@ if selected == "Select Target":
                 st.dataframe(sample.head())
 
                 # Getting RDKit descriptors
-                def RDKit_descriptors(SMILES):
-                    mols = [Chem.MolFromSmiles(i) for i in SMILES]
-                    calc = MoleculeDescriptors.MolecularDescriptorCalculator([x[0] for x in Descriptors._descList])
-                    desc_names = calc.GetDescriptorNames()
-                    Mol_descriptors = []
-                    for mol in mols:
-                        if mol is None:
-                            continue
-                        mol = Chem.AddHs(mol)
-                        descriptors = calc.CalcDescriptors(mol)
-                        Mol_descriptors.append(descriptors)
-                    return Mol_descriptors, desc_names
+#                def RDKit_descriptors(SMILES):
+#                    mols = [Chem.MolFromSmiles(i) for i in SMILES]
+#                    calc = MoleculeDescriptors.MolecularDescriptorCalculator([x[0] for x in Descriptors._descList])
+ #                   desc_names = calc.GetDescriptorNames()
+  #                  Mol_descriptors = []
+   #                 for mol in mols:
+    #                    if mol is None:
+     #                       continue
+      #                  mol = Chem.AddHs(mol)
+       #                 descriptors = calc.CalcDescriptors(mol)
+        #                Mol_descriptors.append(descriptors)
+         #           return Mol_descriptors, desc_names
 
                 MoleculeDescriptors_list, desc_names = RDKit_descriptors(sample['SMILES'])
                 if not MoleculeDescriptors_list:
