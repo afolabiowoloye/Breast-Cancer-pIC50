@@ -190,3 +190,66 @@ if selected == "Select Target":
             except Exception as e:
                 st.error(f"An error occurred: {str(e)}")
 
+
+
+
+    if selected_target == "ER":
+        @st.cache_resource
+        def load_model():
+            MODEL_URL = "https://github.com/afolabiowoloye/xyz/raw/refs/heads/main/model/ER_catboost_regression_model.cbm"
+            MODEL_PATH = "model.cbm"
+    
+            if not os.path.exists(MODEL_PATH):
+                urllib.request.urlretrieve(MODEL_URL, MODEL_PATH)
+    
+            model = CatBoostRegressor()
+            model.load_model(MODEL_PATH)
+            return model
+
+        model = load_model()
+
+        # File uploader for SMILES data
+        smiles_file = st.file_uploader("Upload your sample.csv", type=["csv", "txt"])
+        st.markdown("""[Example input file](https://raw.githubusercontent.com/afolabiowoloye/xyz/refs/heads/main/sample.csv)""")
+    
+        if smiles_file is not None:
+            try:
+                sample = pd.read_csv(smiles_file)
+                if 'SMILES' not in sample.columns:
+                    st.error("Error: The uploaded file must contain a 'SMILES' column.")
+                    st.stop()
+                    
+                st.write("Sample Data Preview:")
+                st.dataframe(sample.head())
+
+                MoleculeDescriptors_list, desc_names = RDKit_descriptors(sample['SMILES'])
+                if not MoleculeDescriptors_list:
+                    st.error("Error: No valid molecules found in the SMILES data.")
+                    st.stop()
+                    
+                df_ligands_descriptors = pd.DataFrame(MoleculeDescriptors_list, columns=desc_names)
+                
+                # Drop problematic columns if they exist
+                for col in ["SPS", "AvgIpc"]:
+                    if col in df_ligands_descriptors.columns:
+                        df_ligands_descriptors = df_ligands_descriptors.drop(col, axis=1)
+
+                # Predictions
+                df_ligands_descriptors_scaled = scaler.fit_transform(df_ligands_descriptors)
+                sample['predicted_pIC50'] = model.predict(df_ligands_descriptors_scaled)
+                
+                st.write("Predicted pIC50 Values:")
+                st.dataframe(sample[['name', 'SMILES', 'predicted_pIC50']])
+                
+                # Download button
+                csv = sample.to_csv(index=False).encode('utf-8')
+                st.download_button(
+                    label="Download Results as CSV",
+                    data=csv,
+                    file_name="predicted_pIC50_results.csv",
+                    mime="text/csv"
+                )
+                
+            except Exception as e:
+                st.error(f"An error occurred: {str(e)}")
+
