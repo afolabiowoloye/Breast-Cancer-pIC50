@@ -1,17 +1,3 @@
-# ---
-# jupyter:
-#   jupytext:
-#     text_representation:
-#       extension: .py
-#       format_name: light
-#       format_version: '1.5'
-#       jupytext_version: 1.16.1
-#   kernelspec:
-#     display_name: Python 3 (ipykernel)
-#     language: python
-#     name: python3
-# ---
-
 import streamlit as st
 from PIL import Image
 import pandas as pd
@@ -22,234 +8,200 @@ from rdkit.Chem import Descriptors, Lipinski
 from rdkit.ML.Descriptors import MoleculeDescriptors
 from streamlit_option_menu import option_menu
 from catboost import CatBoostRegressor
-import requests
-import io
 import os
 import urllib.request
+import tempfile
+from io import StringIO
 
-# Initialize scaler (moved to top level)
+# Initialize scaler
 scaler = StandardScaler()
 
-#-----------Web page setting-------------------#
-page_title = "💊Breast Cancer pIC50 Prediction Web App"
+# Web page settings
+page_title = "💊 Breast Cancer pIC50 Prediction Web App"
 page_icon = "🎗🧬⌬"
-viz_icon = "📊"
-stock_icon = "📋"
-picker_icon = "👇"
 layout = "centered"
-
-#--------------------Page configuration------------------#
 st.set_page_config(page_title=page_title, page_icon=page_icon, layout=layout)
 
-# Title of the app
-image = 'images/logo.png'
-st.image(image, use_column_width=True)
+# App title and logo
+st.image('images/logo.png', use_column_width=True)
 
+# Navigation menu
 selected = option_menu(
     menu_title=page_title + " " + page_icon,
     options=['Home', 'Select Target', 'About', 'Contact'],
-    icons=["house-fill", "capsule", "capsule", "envelope-fill"],
+    icons=["house-fill", "capsule", "info-circle", "envelope-fill"],
     default_index=0,
     orientation="horizontal"
 )
 
-targets = ['Click to select a target', 'ER', 'Aromatase', 'CDK2', 'Braf', 'PI3K', 
-           'VEGFR2', 'mTOR', 'PARP1', 'AKT', 'ATM', 'FGFR1', 'PR', 'HDAC1', 
-           'HDAC2', 'HDAC8', 'CXCR4', 'HER2', 'AR', 'JAK2', 'GSK3B']
+# Available targets with model URLs
+TARGET_MODELS = {
+    'AKT': "https://github.com/afolabiowoloye/Breast-Cancer-pIC50/raw/main/models/AKT_catboost_regression_model.cbm",
+    'ER': "https://github.com/afolabiowoloye/Breast-Cancer-pIC50/raw/main/models/ER_catboost_regression_model.cbm",
+    # Add other targets here
+}
 
-# Getting RDKit descriptors
+targets = ['Click to select a target'] + sorted(TARGET_MODELS.keys())
+
+# Getting RDKit descriptors with improved error handling
 def RDKit_descriptors(SMILES):
-    mols = [Chem.MolFromSmiles(i) for i in SMILES]
+    valid_smiles = []
+    mols = []
+    
+    for i, smi in enumerate(SMILES):
+        mol = Chem.MolFromSmiles(smi)
+        if mol is None:
+            st.warning(f"Invalid SMILES at row {i+1}: {smi}")
+            continue
+        valid_smiles.append(smi)
+        mols.append(mol)
+    
+    if not mols:
+        return None, None, None
+    
     calc = MoleculeDescriptors.MolecularDescriptorCalculator([x[0] for x in Descriptors._descList])
     desc_names = calc.GetDescriptorNames()
+    
     Mol_descriptors = []
     for mol in mols:
-        if mol is None:
+        try:
+            mol = Chem.AddHs(mol)
+            descriptors = calc.CalcDescriptors(mol)
+            Mol_descriptors.append(descriptors)
+        except Exception as e:
+            st.warning(f"Failed to calculate descriptors for molecule: {str(e)}")
             continue
-        mol = Chem.AddHs(mol)
-        descriptors = calc.CalcDescriptors(mol)
-        Mol_descriptors.append(descriptors)
-    return Mol_descriptors, desc_names
+    
+    return Mol_descriptors, desc_names, valid_smiles
 
+# Home page
 if selected == "Home":
     st.markdown("""
     <h3 style='color: darkblue;'>Welcome to Breast Cancer pIC<sub>50</sub> Prediction Web App</h3>
-    We are thrilled to have you here. This app is designed to help researchers, clinicians, and scientists predict the <strong>pIC<sub>50</sub> values</strong> of compounds targeting <strong>20 different breast cancer targets</strong>. Whether exploring potential drug candidates or analyzing molecular interactions, this tool is here to simplify your work and accelerate your discoveries.
     """, unsafe_allow_html=True)
     
-    st.markdown("""
-    <h4 style='color: blue;'>Key Features</h4>
-    <strong>...</strong>
-    """, unsafe_allow_html=True)
+    st.image('images/workflow.png', use_column_width=True)
 
-    image2 = 'images/workflow.png'
-    st.image(image2, use_column_width=True)
-    
-    with st.sidebar:
-        st.header("Overview and Usage")
-        st.markdown("""
-        <h4 style='color: blue;'>Brief Overview of the App</h4>
-        The <strong>Breast Cancer pIC<sub>50</sub> Predictor</strong> is a powerful tool that leverages advanced <em>machine learning algorithms</em> to predict the <strong>pIC<sub>50</sub> values</strong> of compounds. The pIC<sub>50</sub> value is a critical metric in drug discovery, representing the potency of a compound in inhibiting a specific target.<br>
-               
-        <h4 style='color: blue;'>How to Use the App</h4>
-        <strong>1. Select a Target:</strong> Choose one of the 20 breast cancer targets from the Home page.<br>
-        <strong>2. Input Your Compound:</strong> Upload compounds' SMILES string file.<br>
-        <strong>3. Get Predictions:</strong> Click <strong>Predict</strong> to receive the pIC<sub>50</sub> value for your compound.<br>
-        <strong>4. Explore Results:</strong> View detailed predictions and download the results for further analysis.<br>
-              
-        <h4 style='color: blue;'>Why Use This App?</h4>
-        <strong>Save Time:</strong> Quickly screen compounds and prioritize the most potent candidates.<br>
-        <strong>Data-Driven Decisions:</strong> Make informed decisions based on accurate pIC<sub>50</sub> predictions.<br>
-        <strong>Accelerate Research:</strong> Streamline your drug discovery workflow and focus on the most promising leads.<br>
-            
-        <h4 style='color: blue;'>Get Started</h4>
-        Ready to explore? Click on the <strong>Select Target</strong> button to begin your journey toward discovering potent breast cancer inhibitors. If you have any questions or need assistance, please contact us.
-        """, unsafe_allow_html=True)
-        st.markdown("""[Example input file](https://raw.githubusercontent.com/afolabiowoloye/xyz/refs/heads/main/sample.csv)""")
-
+# Target selection page
 if selected == "Select Target":
     st.subheader("Select preferred target")
-    selected_target = st.selectbox(picker_icon, targets)
+    selected_target = st.selectbox("👇", targets)
 
     if selected_target == "Click to select a target":
-        st.markdown("""
-        <h7 style='color: red;'><strong>Note: </strong>pIC<sub>50</sub> is the negative log of the IC<sub>50</sub> value, offering a logarithmic measure of compound potency.</h7>
-        """, unsafe_allow_html=True)
+        st.info("Please select a target protein from the dropdown list")
+    else:
+        # Improved model loading with caching and temp files
+        @st.cache_resource(ttl=24*3600, show_spinner="Loading prediction model...")
+        def load_model(target):
+            MODEL_URL = TARGET_MODELS[target]
+            
+            # Create temp directory if it doesn't exist
+            temp_dir = tempfile.mkdtemp()
+            model_path = os.path.join(temp_dir, f"{target}_model.cbm")
+            
+            if not os.path.exists(model_path):
+                try:
+                    urllib.request.urlretrieve(MODEL_URL, model_path)
+                    st.success(f"{target} model downloaded successfully")
+                except Exception as e:
+                    st.error(f"Failed to download model: {str(e)}")
+                    return None
+            
+            try:
+                model = CatBoostRegressor()
+                model.load_model(model_path)
+                return model
+            except Exception as e:
+                st.error(f"Failed to load model: {str(e)}")
+                return None
+
+        model = load_model(selected_target)
         
-    if selected_target == "AKT":
-        #@st.cache_resource
-        def load_model():
-            MODEL_URL = "https://github.com/afolabiowoloye/Breast-Cancer-pIC50/raw/refs/heads/main/models/AKT_catboost_regression_model.cbm"
-            MODEL_PATH = "model.cbm"
-    
-            if not os.path.exists(MODEL_PATH):
-                urllib.request.urlretrieve(MODEL_URL, MODEL_PATH)
-    
-            model = CatBoostRegressor()
-            model.load_model(MODEL_PATH)
-            return model
-
-        model = load_model()
-
-        # File uploader for SMILES data
-        smiles_file = st.file_uploader("Upload your sample.csv", type=["csv", "txt"])
-        st.markdown("""[Example input file](https://raw.githubusercontent.com/afolabiowoloye/xyz/refs/heads/main/sample.csv)""")
-    
-        if smiles_file is not None:
-            try:
-                sample = pd.read_csv(smiles_file)
-                if 'SMILES' not in sample.columns:
-                    st.error("Error: The uploaded file must contain a 'SMILES' column.")
-                    st.stop()
-                    
-                st.write("Sample Data Preview:")
-                st.dataframe(sample.head())
-
-                # Getting RDKit descriptors
-#                def RDKit_descriptors(SMILES):
-#                    mols = [Chem.MolFromSmiles(i) for i in SMILES]
-#                    calc = MoleculeDescriptors.MolecularDescriptorCalculator([x[0] for x in Descriptors._descList])
- #                   desc_names = calc.GetDescriptorNames()
-  #                  Mol_descriptors = []
-   #                 for mol in mols:
-    #                    if mol is None:
-     #                       continue
-      #                  mol = Chem.AddHs(mol)
-       #                 descriptors = calc.CalcDescriptors(mol)
-        #                Mol_descriptors.append(descriptors)
-         #           return Mol_descriptors, desc_names
-
-                MoleculeDescriptors_list, desc_names = RDKit_descriptors(sample['SMILES'])
-                if not MoleculeDescriptors_list:
-                    st.error("Error: No valid molecules found in the SMILES data.")
-                    st.stop()
-                    
-                df_ligands_descriptors = pd.DataFrame(MoleculeDescriptors_list, columns=desc_names)
-                
-                # Drop problematic columns if they exist
-                for col in ["SPS", "AvgIpc"]:
-                    if col in df_ligands_descriptors.columns:
-                        df_ligands_descriptors = df_ligands_descriptors.drop(col, axis=1)
-
-                # Predictions
-                df_ligands_descriptors_scaled = scaler.fit_transform(df_ligands_descriptors)
-                sample['predicted_pIC50'] = model.predict(df_ligands_descriptors_scaled)
-                
-                st.write("Predicted pIC50 Values:")
-                st.dataframe(sample[['name', 'SMILES', 'predicted_pIC50']])
-                
-                # Download button
-                csv = sample.to_csv(index=False).encode('utf-8')
+        if model is not None:
+            # File upload section with example data
+            st.subheader("Upload Compound Data")
+            
+            # Example data
+            example_data = """name,SMILES
+Example1,CC(=O)OC1=CC=CC=C1C(=O)O
+Example2,C1=CC=C(C=C1)C=O"""
+            
+            # Show example and download button
+            with st.expander("Show example input format"):
+                st.code(example_data)
                 st.download_button(
-                    label="Download Results as CSV",
-                    data=csv,
-                    file_name="predicted_pIC50_results.csv",
+                    label="Download example CSV",
+                    data=example_data,
+                    file_name="example_compounds.csv",
                     mime="text/csv"
                 )
-                
-            except Exception as e:
-                st.error(f"An error occurred: {str(e)}")
-
-
-
-
-    if selected_target == "ER":
-        @st.cache_resource
-        def load_model():
-            MODEL_URL = "https://github.com/afolabiowoloye/xyz/raw/refs/heads/main/model/ER_catboost_regression_model.cbm"
-            MODEL_PATH = "model.cbm"
-    
-            if not os.path.exists(MODEL_PATH):
-                urllib.request.urlretrieve(MODEL_URL, MODEL_PATH)
-    
-            model = CatBoostRegressor()
-            model.load_model(MODEL_PATH)
-            return model
-
-        model = load_model()
-
-        # File uploader for SMILES data
-        smiles_file = st.file_uploader("Upload your sample.csv", type=["csv", "txt"])
-        st.markdown("""[Example input file](https://raw.githubusercontent.com/afolabiowoloye/xyz/refs/heads/main/sample.csv)""")
-    
-        if smiles_file is not None:
-            try:
-                sample = pd.read_csv(smiles_file)
-                if 'SMILES' not in sample.columns:
-                    st.error("Error: The uploaded file must contain a 'SMILES' column.")
-                    st.stop()
+            
+            smiles_file = st.file_uploader(
+                "Upload your compound data (CSV)",
+                type=["csv"],
+                help="File must contain 'SMILES' column and optionally 'name' column"
+            )
+            
+            if smiles_file is not None:
+                try:
+                    # Read and validate input
+                    sample = pd.read_csv(smiles_file)
                     
-                st.write("Sample Data Preview:")
-                st.dataframe(sample.head())
-
-                MoleculeDescriptors_list, desc_names = RDKit_descriptors(sample['SMILES'])
-                if not MoleculeDescriptors_list:
-                    st.error("Error: No valid molecules found in the SMILES data.")
-                    st.stop()
+                    if 'SMILES' not in sample.columns:
+                        st.error("Error: Input file must contain a 'SMILES' column")
+                        st.stop()
                     
-                df_ligands_descriptors = pd.DataFrame(MoleculeDescriptors_list, columns=desc_names)
-                
-                # Drop problematic columns if they exist
-                for col in ["SPS", "AvgIpc"]:
-                    if col in df_ligands_descriptors.columns:
-                        df_ligands_descriptors = df_ligands_descriptors.drop(col, axis=1)
-
-                # Predictions
-                df_ligands_descriptors_scaled = scaler.fit_transform(df_ligands_descriptors)
-                sample['predicted_pIC50'] = model.predict(df_ligands_descriptors_scaled)
-                
-                st.write("Predicted pIC50 Values:")
-                st.dataframe(sample[['name', 'SMILES', 'predicted_pIC50']])
-                
-                # Download button
-                csv = sample.to_csv(index=False).encode('utf-8')
-                st.download_button(
-                    label="Download Results as CSV",
-                    data=csv,
-                    file_name="predicted_pIC50_results.csv",
-                    mime="text/csv"
-                )
-                
-            except Exception as e:
-                st.error(f"An error occurred: {str(e)}")
-
+                    # Show preview
+                    st.subheader("Input Data Preview")
+                    st.dataframe(sample.head())
+                    
+                    # Calculate descriptors
+                    with st.spinner("Calculating molecular descriptors..."):
+                        descriptors, desc_names, valid_smiles = RDKit_descriptors(sample['SMILES'])
+                    
+                    if not descriptors:
+                        st.error("Error: No valid molecules found in the input file")
+                        st.stop()
+                    
+                    # Create descriptors dataframe
+                    df_descriptors = pd.DataFrame(descriptors, columns=desc_names)
+                    
+                    # Remove problematic columns
+                    problematic_cols = ["SPS", "AvgIpc"]
+                    cols_to_drop = [col for col in problematic_cols if col in df_descriptors.columns]
+                    if cols_to_drop:
+                        df_descriptors = df_descriptors.drop(cols_to_drop, axis=1)
+                    
+                    # Make predictions
+                    with st.spinner("Making predictions..."):
+                        X_scaled = scaler.fit_transform(df_descriptors)
+                        predictions = model.predict(X_scaled)
+                    
+                    # Prepare results
+                    results = sample[sample['SMILES'].isin(valid_smiles)].copy()
+                    results['predicted_pIC50'] = predictions
+                    results = results.round({'predicted_pIC50': 3})  # Round to 3 decimal places
+                    
+                    # Show results
+                    st.subheader("Prediction Results")
+                    st.dataframe(results[['name', 'SMILES', 'predicted_pIC50']])
+                    
+                    # Download results
+                    csv = results.to_csv(index=False).encode('utf-8')
+                    st.download_button(
+                        label="Download Full Results",
+                        data=csv,
+                        file_name=f"{selected_target}_predictions.csv",
+                        mime="text/csv",
+                        help="Download complete prediction results with all descriptors"
+                    )
+                    
+                    # Show some statistics
+                    st.subheader("Prediction Statistics")
+                    col1, col2, col3 = st.columns(3)
+                    col1.metric("Compounds Processed", len(results))
+                    col2.metric("Average pIC50", f"{results['predicted_pIC50'].mean():.2f}")
+                    col3.metric("Highest pIC50", f"{results['predicted_pIC50'].max():.2f}")
+                    
+                except Exception as e:
+                    st.error(f"An error occurred during processing: {str(e)}")
