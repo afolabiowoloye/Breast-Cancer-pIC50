@@ -31,7 +31,7 @@ import urllib.request
 scaler = StandardScaler()
 
 #-----------Web page setting-------------------#
-page_title = "💊Breast Cancer pIC50 Prediction Web App"
+page_title = "💊Dr Olarele"
 page_icon = "🎗🧬⌬"
 viz_icon = "📊"
 stock_icon = "📋"
