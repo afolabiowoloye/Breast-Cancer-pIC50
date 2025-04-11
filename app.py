@@ -91,6 +91,27 @@ if selected == "Home":
     
     st.image('images/workflow.png', use_column_width=True)
 
+    with st.sidebar.header("""Overview and Usage"""):
+        st.sidebar.markdown("""
+        <h4 style='color: blue;'>Brief Overview of the App</h4>
+        The <strong>Breast Cancer pIC<sub>50</sub> Predictor</strong> is a powerful tool that leverages advanced <em>machine learning algorithms</em> to predict the <strong>pIC<sub>50</sub> values</strong> of compounds. The pIC<sub>50</sub> value is a critical metric in drug discovery, representing the potency of a compound in inhibiting a specific target.<br>
+               
+        <h4 style='color: blue;'>How to Use the App</h4>
+        <strong>1. Select a Target:</strong> Choose one of the 20 breast cancer targets from the Home page.<br>
+        <strong>2. Input Your Compound:</strong> Upload compounds' SMILES string file.<br>
+        <strong>3. Get Predictions:</strong> Click <strong>Predict</strong> to receive the <sub>50</sub> value for your compound.<br>
+        <strong>4. Explore Results:</strong> View detailed predictions and download the results for further analysis.<br>
+              
+        <h4 style='color: blue;'>Why Use This App?</h4>
+        <strong>Save Time:</strong> Quickly screen compounds and prioritize the most potent candidates.<br>
+        <strong>Data-Driven Decisions:</strong> Make informed decisions based on accurate pIC<sub>50</sub> predictions.<br>
+        <strong>Accelerate Research:</strong> Streamline your drug discovery workflow and focus on the most promising leads.<br>
+            
+        <h4 style='color: blue;'>Get Started</h4>
+        Ready to explore? Click on the <strong>Select Target</strong> button to begin your journey toward discovering potent breast cancer inhibitors. If you have any questions or need assistance, please contact us.
+        """, unsafe_allow_html=True)
+        st.markdown("""[Example input file](https://raw.githubusercontent.com/afolabiowoloye/xyz/refs/heads/main/sample.csv)""")
+
 # Target selection page
 if selected == "Select Target":
     st.subheader("Select preferred target")
