@@ -43,7 +43,7 @@ TARGET_MODELS = {
     'CXCR4': "https://github.com/afolabiowoloye/Breast-Cancer-pIC50/raw/refs/heads/main/models/CXCR4_catboost_regression_model.cbm",
     'FGFR': "https://github.com/afolabiowoloye/Breast-Cancer-pIC50/raw/refs/heads/main/models/FGFR_catboost_regression_model.cbm",
     'VEGFR2': "https://github.com/afolabiowoloye/Breast-Cancer-pIC50/raw/refs/heads/main/models/VEGFR2_catboost_regression_model.cbm",
-    'braf': "https://github.com/afolabiowoloye/Breast-Cancer-pIC50/raw/refs/heads/main/models/braf_catboost_regression_model.cbm",
+    'BRAF': "https://github.com/afolabiowoloye/Breast-Cancer-pIC50/raw/refs/heads/main/models/braf_catboost_regression_model.cbm",
     'GSK3B': "https://github.com/afolabiowoloye/Breast-Cancer-pIC50/raw/refs/heads/main/models/GSK3B_catboost_regression_model.cbm",
     'HDCA1': "https://github.com/afolabiowoloye/Breast-Cancer-pIC50/raw/refs/heads/main/models/HDAC1_catboost_regression_model.cbm",
     'HDCA2': "https://github.com/afolabiowoloye/Breast-Cancer-pIC50/raw/refs/heads/main/models/HDAC2_catboost_regression_model.cbm",
