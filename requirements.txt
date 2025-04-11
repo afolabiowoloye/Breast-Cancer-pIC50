@@ -1,4 +1,4 @@
-rdkit==2024.9.1
+rdkit==2022.09.5
 streamlit-option-menu
 Pillow
 requests==2.28.1
