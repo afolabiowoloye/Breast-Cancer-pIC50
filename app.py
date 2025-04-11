@@ -117,7 +117,7 @@ if selected == "Select Target":
         """, unsafe_allow_html=True)
         
     if selected_target == "AKT":
-        @st.cache_resource
+        #@st.cache_resource
         def load_model():
             MODEL_URL = "https://github.com/afolabiowoloye/Breast-Cancer-pIC50/raw/refs/heads/main/models/AKT_catboost_regression_model.cbm"
             MODEL_PATH = "model.cbm"
