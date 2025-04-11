@@ -16,21 +16,17 @@ import streamlit as st
 from PIL import Image
 import pandas as pd
 import numpy as np
-import pickle
-import joblib
-from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.ensemble import ExtraTreesRegressor
-#from catboost import CatBoostRegressor
-from lightgbm import LGBMRegressor
-from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+#from sklearn.model_selection import train_test_split
+#from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 from sklearn.preprocessing import StandardScaler, Normalizer, MaxAbsScaler
 from rdkit import Chem
 from rdkit.Chem import Descriptors, Lipinski
 from rdkit.ML.Descriptors import MoleculeDescriptors
-import seaborn as sns
-import matplotlib.pyplot as plt
 from streamlit_option_menu import option_menu # for setting up menu bar
+from catboost import CatBoostRegressor
+np.__version__ = '1.21.6'
+import requests
+import io
 
 
 # +
@@ -47,7 +43,7 @@ st.set_page_config(page_title = page_title, page_icon = page_icon, layout = layo
 # Title of the app
 #st.title("pIC50 Prediction App")
 # Logo image
-image = 'logo/logo.png'
+image = 'images/logo.png'
 st.image(image, use_container_width=True)
 
 
@@ -122,58 +118,19 @@ if selected == "Select Target":
         """, unsafe_allow_html=True)
         
     if selected_target == "ER":
-        data_link_id = "1C-cFzESEfJcEdWGDLLdVawQbgZvbU_rQ"
-        data_link = f'https://drive.google.com/uc?id={data_link_id}'
-        data = pd.read_csv(data_link)
-        st.write("Data Preview:")
-        st.dataframe(data.head())
-        #col = data.columns
-        #st.write(col)
-
-        # Data preprocessing
-        data.replace([np.inf, -np.inf], np.nan, inplace=True)
-        data.dropna(axis=0, inplace=True)
-
-        X = data.drop('pIC50', axis=1)
-        y = data['pIC50']
-
-        # Train-test split
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=8)
-
-        # Scaling
-        scaler = MaxAbsScaler()
-        X_train_scaled = scaler.fit_transform(X_train)
-        X_test_scaled = scaler.transform(X_test)
+        def load_model():
+            import os
+            import urllib.request
+            MODEL_URL = "https://github.com/afolabiowoloye/catboost/raw/refs/heads/main/model/catboost_regression_model.cbm"
+            MODEL_PATH = "model.cbm"
     
-        # Model training
-        model = ExtraTreesRegressor(n_estimators=1200, max_features='sqrt', min_samples_leaf=1,
-                                    min_samples_split=5, max_depth=30, random_state=42)
-        model.fit(X_train_scaled, y_train)
+            if not os.path.exists(MODEL_PATH):
+                urllib.request.urlretrieve(MODEL_URL, MODEL_PATH)
+    
+            model = CatBoostRegressor()
+            return model.load_model(MODEL_PATH)
 
-        # Predictions
-        y_pred = model.predict(X_test_scaled)
-
-        # Metrics
-        mae = mean_absolute_error(y_test, y_pred)
-        mse = mean_squared_error(y_test, y_pred)
-        rmse = np.sqrt(mse)
-        r2 = r2_score(y_test, y_pred)
-
-        #st.write(f'R-squared (R2) Score: {r2:.2f}')
-        #st.write(f'Mean Absolute Error: {mae:.2f}')
-        #st.write(f'Mean Squared Error: {mse:.2f}')
-        #st.write(f'Root Mean Squared Error: {rmse:.2f}')
-
-
-        # Plotting
-        fig, ax = plt.subplots()
-        sns.regplot(x=y_test, y=y_pred, scatter_kws={'alpha': 0.3, 'color': 'blue'}, line_kws={'color':'red'}, ax=ax)
-        ax.set_xlabel('Experimental pIC50')
-        ax.set_ylabel('Predicted pIC50')
-        ax.set_xlim(2, 11.5)
-        ax.set_ylim(2, 11.5)
-        plt.title('Actual vs Predicted pIC50')
-        st.pyplot(fig)
+        model = load_model()
 
         # File uploader for SMILES data
         smiles_file = st.file_uploader("Upload your sample.csv", type="csv")
@@ -213,301 +170,4 @@ if selected == "Select Target":
             download_result = pd.DataFrame(sample)
             download_result = download_result.to_csv(index=False)
             st.download_button("Press to Download Result",download_result,"file.csv","text/csv",key='download-csv')
-
-# -
-
-## Braf
-    if selected_target == "Braf":
-    # Link to the dataset on Google Drive
-        data_link_id = "1k57-I0CsiMpXko4mZV6GRpxoag9USJbf"
-        data_link = f'https://drive.google.com/uc?id={data_link_id}'
-        data = pd.read_csv(data_link)
-        st.write("Data Preview:")
-        st.dataframe(data.head())
-        #col = data.columns
-        #st.write(col)
-
-        # Data preprocessing
-        data.replace([np.inf, -np.inf], np.nan, inplace=True)
-        data.dropna(axis=0, inplace=True)
-
-        X = data.drop('pIC50', axis=1)
-        y = data['pIC50']
-
-        # Train-test split
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=8)
-
-        # Scaling
-        scaler = MaxAbsScaler()
-        X_train_scaled = scaler.fit_transform(X_train)
-        X_test_scaled = scaler.transform(X_test)
-    
-        # Model training
-        model = ExtraTreesRegressor(max_depth = 40,
-                                min_samples_leaf = 1,
-                                min_samples_split = 10,
-                                n_estimators = 200,
-                                random_state=42)
-        model.fit(X_train_scaled, y_train)
-
-        # Predictions
-        y_pred = model.predict(X_test_scaled)
-
-        # Metrics
-        mae = mean_absolute_error(y_test, y_pred)
-        mse = mean_squared_error(y_test, y_pred)
-        rmse = np.sqrt(mse)
-        r2 = r2_score(y_test, y_pred)
-
-        #st.write(f'R-squared (R2) Score: {r2:.2f}')
-        #st.write(f'Mean Absolute Error: {mae:.2f}')
-        #st.write(f'Mean Squared Error: {mse:.2f}')
-        #st.write(f'Root Mean Squared Error: {rmse:.2f}')
-
-
-        # Plotting
-        fig, ax = plt.subplots()
-        sns.regplot(x=y_test, y=y_pred, scatter_kws={'alpha': 0.3, 'color': 'indigo'}, line_kws={'color':'crimson'}, ax=ax)
-        ax.set_xlabel('Experimental pIC50')
-        ax.set_ylabel('Predicted pIC50')
-        ax.set_xlim(3.5, 10.5)
-        ax.set_ylim(3.5, 10.5)
-        plt.title('Actual vs Predicted pIC50')
-        st.pyplot(fig)
-
-    # File uploader for SMILES data
-        smiles_file = st.file_uploader("Upload your sample.csv", type="csv")
-        st.markdown("""[Example input file](https://raw.githubusercontent.com/afolabiowoloye/xyz/refs/heads/main/sample.csv)""")
-    
-        if smiles_file is not None:
-            sample = pd.read_csv(smiles_file)
-            st.write("Sample Data Preview:")
-            st.dataframe(sample.head())
-
-
-        # Getting RDKit descriptors
-            def RDKit_descriptors(SMILES):
-                mols = [Chem.MolFromSmiles(i) for i in SMILES]
-                calc = MoleculeDescriptors.MolecularDescriptorCalculator([x[0] for x in Descriptors._descList])
-                desc_names = calc.GetDescriptorNames()
-                Mol_descriptors = []
-                for mol in mols:
-                    mol = Chem.AddHs(mol)
-                    descriptors = calc.CalcDescriptors(mol)
-                    Mol_descriptors.append(descriptors)
-                return Mol_descriptors, desc_names
-
-            MoleculeDescriptors_list, desc_names = RDKit_descriptors(sample['SMILES'])
-            df_ligands_descriptors = pd.DataFrame(MoleculeDescriptors_list, columns=desc_names)
-            #st.dataframe(df_ligands_descriptors.head())
-        
-            df_ligands_descriptors = df_ligands_descriptors.drop(["SPS", "AvgIpc"], axis=1)
-            #col2 = df_ligands_descriptors.columns
-            #st.write(col2)
-
-        # Predictions
-            df_ligands_descriptors_scaled = scaler.fit_transform(df_ligands_descriptors)
-            sample['predicted_pIC50'] = model.predict(df_ligands_descriptors_scaled)
-            st.write("Predicted pIC50 Values:")
-            st.dataframe(sample[['name', 'SMILES', 'predicted_pIC50']])
-            download_result = pd.DataFrame(sample)
-            download_result = download_result.to_csv(index=False)
-            st.download_button("Press to Download Result",download_result,"file.csv","text/csv",key='download-csv')
-
-
-
-    ## CDK2
-    if selected_target == "CDK2":
-        # Link to the dataset on Google Drive
-        data_link_id = "1_m9ngbxP-jQnkspEinnj2Pd3GfC3S5ve"
-        data_link = f'https://drive.google.com/uc?id={data_link_id}'
-        data = pd.read_csv(data_link)
-        st.write("Data Preview:")
-        st.dataframe(data.head())
-        #col = data.columns
-        #st.write(col)
-
-        # Data preprocessing
-        data.replace([np.inf, -np.inf], np.nan, inplace=True)
-        data.dropna(axis=0, inplace=True)
-
-        X = data.drop('pIC50', axis=1)
-        y = data['pIC50']
-
-        # Train-test split
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=8)
-
-        # Scaling
-        scaler = MaxAbsScaler()
-        X_train_scaled = scaler.fit_transform(X_train)
-        X_test_scaled = scaler.transform(X_test)
-    
-        # Model training
-        model = LGBMRegressor(n_estimators=100, random_state=42)
-        model.fit(X_train_scaled, y_train)
-
-        # Predictions
-        y_pred = model.predict(X_test_scaled)
-
-        # Metrics
-        mae = mean_absolute_error(y_test, y_pred)
-        mse = mean_squared_error(y_test, y_pred)
-        rmse = np.sqrt(mse)
-        r2 = r2_score(y_test, y_pred)
-
-        #st.write(f'R-squared (R2) Score: {r2:.2f}')
-        #st.write(f'Mean Absolute Error: {mae:.2f}')
-        #st.write(f'Mean Squared Error: {mse:.2f}')
-        #st.write(f'Root Mean Squared Error: {rmse:.2f}')
-
-
-        # Plotting
-        fig, ax = plt.subplots()
-        sns.regplot(x=y_test, y=y_pred, scatter_kws={'alpha': 0.3, 'color': 'red'}, line_kws={'color':'blue'}, ax=ax)
-        ax.set_xlabel('Experimental pIC50')
-        ax.set_ylabel('Predicted pIC50')
-        ax.set_xlim(2.5, 10)
-        ax.set_ylim(3, 10)
-        plt.title('Actual vs Predicted pIC50')
-        st.pyplot(fig)
-
-    # File uploader for SMILES data
-        smiles_file = st.file_uploader("Upload your sample.csv", type="csv")
-        st.markdown("""[Example input file](https://raw.githubusercontent.com/afolabiowoloye/xyz/refs/heads/main/sample.csv)""")
-    
-        if smiles_file is not None:
-            sample = pd.read_csv(smiles_file)
-            st.write("Sample Data Preview:")
-            st.dataframe(sample.head())
-
-
-        # Getting RDKit descriptors
-            def RDKit_descriptors(SMILES):
-                mols = [Chem.MolFromSmiles(i) for i in SMILES]
-                calc = MoleculeDescriptors.MolecularDescriptorCalculator([x[0] for x in Descriptors._descList])
-                desc_names = calc.GetDescriptorNames()
-                Mol_descriptors = []
-                for mol in mols:
-                    mol = Chem.AddHs(mol)
-                    descriptors = calc.CalcDescriptors(mol)
-                    Mol_descriptors.append(descriptors)
-                return Mol_descriptors, desc_names
-
-            MoleculeDescriptors_list, desc_names = RDKit_descriptors(sample['SMILES'])
-            df_ligands_descriptors = pd.DataFrame(MoleculeDescriptors_list, columns=desc_names)
-            #st.dataframe(df_ligands_descriptors.head())
-        
-            df_ligands_descriptors = df_ligands_descriptors.drop(["SPS", "AvgIpc"], axis=1)
-            #col2 = df_ligands_descriptors.columns
-            #st.write(col2)
-
-        # Predictions
-            df_ligands_descriptors_scaled = scaler.fit_transform(df_ligands_descriptors)
-            sample['predicted_pIC50'] = model.predict(df_ligands_descriptors_scaled)
-            st.write("Predicted pIC50 Values:")
-            st.dataframe(sample[['name', 'SMILES', 'predicted_pIC50']])
-            download_result = pd.DataFrame(sample)
-            download_result = download_result.to_csv(index=False)
-            st.download_button("Press to Download Result",download_result,"file.csv","text/csv",key='download-csv')
-
-
-    ## Aromatase
-    if selected_target == "Aromatase":
-    # Link to the dataset on Google Drive
-        data_link_id = "1kqoIyXMI4uBi4jHTw-gnjaq7AiWCFYZ0"
-        data_link = f'https://drive.google.com/uc?id={data_link_id}'
-        data = pd.read_csv(data_link)
-        st.write("Data Preview:")
-        st.dataframe(data.head())
-        #col = data.columns
-        #st.write(col)
-
-        # Data preprocessing
-        data.replace([np.inf, -np.inf], np.nan, inplace=True)
-        data.dropna(axis=0, inplace=True)
-
-        X = data.drop('pIC50', axis=1)
-        y = data['pIC50']
-
-        # Train-test split
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=8)
-
-        # Scaling
-        scaler = MaxAbsScaler()
-        X_train_scaled = scaler.fit_transform(X_train)
-        X_test_scaled = scaler.transform(X_test)
-    
-        # Model training
-        model = ExtraTreesRegressor(max_depth = 40,
-                                min_samples_leaf = 1,
-                                min_samples_split = 10,
-                                n_estimators = 200,
-                                random_state=42)
-        model.fit(X_train_scaled, y_train)
-
-
-        # Predictions
-        y_pred = model.predict(X_test_scaled)
-
-        # Metrics
-        mae = mean_absolute_error(y_test, y_pred)
-        mse = mean_squared_error(y_test, y_pred)
-        rmse = np.sqrt(mse)
-        r2 = r2_score(y_test, y_pred)
-
-        #st.write(f'R-squared (R2) Score: {r2:.2f}')
-        #st.write(f'Mean Absolute Error: {mae:.2f}')
-        #st.write(f'Mean Squared Error: {mse:.2f}')
-        #st.write(f'Root Mean Squared Error: {rmse:.2f}')
-
-
-        # Plotting
-        fig, ax = plt.subplots()
-        sns.regplot(x=y_test, y=y_pred, scatter_kws={'alpha': 0.3, 'color': 'darkgreen'}, line_kws={'color':'deeppink'}, ax=ax)
-        ax.set_xlabel('Experimental pIC50')
-        ax.set_ylabel('Predicted pIC50')
-        ax.set_xlim(3.5, 10.5)
-        ax.set_ylim(3.5, 10.5)
-        plt.title('Actual vs Predicted pIC50')
-        st.pyplot(fig)
-
-    # File uploader for SMILES data
-        smiles_file = st.file_uploader("Upload your sample.csv", type="csv")
-        st.markdown("""[Example input file](https://raw.githubusercontent.com/afolabiowoloye/xyz/refs/heads/main/sample.csv)""")
-    
-        if smiles_file is not None:
-            sample = pd.read_csv(smiles_file)
-            st.write("Sample Data Preview:")
-            st.dataframe(sample.head())
-
-
-        # Getting RDKit descriptors
-            def RDKit_descriptors(SMILES):
-                mols = [Chem.MolFromSmiles(i) for i in SMILES]
-                calc = MoleculeDescriptors.MolecularDescriptorCalculator([x[0] for x in Descriptors._descList])
-                desc_names = calc.GetDescriptorNames()
-                Mol_descriptors = []
-                for mol in mols:
-                    mol = Chem.AddHs(mol)
-                    descriptors = calc.CalcDescriptors(mol)
-                    Mol_descriptors.append(descriptors)
-                return Mol_descriptors, desc_names
-
-            MoleculeDescriptors_list, desc_names = RDKit_descriptors(sample['SMILES'])
-            df_ligands_descriptors = pd.DataFrame(MoleculeDescriptors_list, columns=desc_names)
-            #st.dataframe(df_ligands_descriptors.head())
-        
-            df_ligands_descriptors = df_ligands_descriptors.drop(["SPS", "AvgIpc"], axis=1)
-            #col2 = df_ligands_descriptors.columns
-            #st.write(col2)
-
-        # Predictions
-            df_ligands_descriptors_scaled = scaler.fit_transform(df_ligands_descriptors)
-            sample['predicted_pIC50'] = model.predict(df_ligands_descriptors_scaled)
-            st.write("Predicted pIC50 Values:")
-            st.dataframe(sample[['name', 'SMILES', 'predicted_pIC50']])
-            download_result = pd.DataFrame(sample)
-            download_result = download_result.to_csv(index=False)
-            st.download_button("Press to Download Result",download_result,"file.csv","text/csv",key='download-csv')
-
 
