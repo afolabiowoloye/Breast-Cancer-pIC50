@@ -57,6 +57,20 @@ targets = ['Click to select a target', 'ER', 'Aromatase', 'CDK2', 'Braf', 'PI3K'
            'VEGFR2', 'mTOR', 'PARP1', 'AKT', 'ATM', 'FGFR1', 'PR', 'HDAC1', 
            'HDAC2', 'HDAC8', 'CXCR4', 'HER2', 'AR', 'JAK2', 'GSK3B']
 
+# Getting RDKit descriptors
+def RDKit_descriptors(SMILES):
+    mols = [Chem.MolFromSmiles(i) for i in SMILES]
+    calc = MoleculeDescriptors.MolecularDescriptorCalculator([x[0] for x in Descriptors._descList])
+    desc_names = calc.GetDescriptorNames()
+    Mol_descriptors = []
+    for mol in mols:
+        if mol is None:
+            continue
+        mol = Chem.AddHs(mol)
+        descriptors = calc.CalcDescriptors(mol)
+        Mol_descriptors.append(descriptors)
+    return Mol_descriptors, desc_names
+
 if selected == "Home":
     st.markdown("""
     <h3 style='color: darkblue;'>Welcome to Breast Cancer pIC<sub>50</sub> Prediction Web App</h3>
