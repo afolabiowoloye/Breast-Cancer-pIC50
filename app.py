@@ -54,8 +54,7 @@ TARGET_MODELS = {
     'mTOR': "https://github.com/afolabiowoloye/Breast-Cancer-pIC50/raw/refs/heads/main/models/mTOR_catboost_regression_model.cbm",
     'PI3K': "https://github.com/afolabiowoloye/Breast-Cancer-pIC50/raw/refs/heads/main/models/PI3K_catboost_regression_model.cbm",
     'PR': "https://github.com/afolabiowoloye/Breast-Cancer-pIC50/raw/refs/heads/main/models/PR_catboost_regression_model.cbm",
-    'androgen': "https://github.com/afolabiowoloye/Breast-Cancer-pIC50/raw/refs/heads/main/models/androgen_catboost_regression_model.cbm",
-    # Add other targets here
+     # Add other targets here
 }
 
 targets = ['Click to select a target'] + sorted(TARGET_MODELS.keys())
