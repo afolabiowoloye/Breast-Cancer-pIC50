@@ -246,24 +246,24 @@ Example2,C1=CC=C(C=C1)C=O"""
 
     with st.sidebar.header("""Targets"""):
         st.sidebar.markdown("""
-        <strong>HER2: </strong>Human Epidermal Growth Factor Receptor 2<be>
-        <strong>AKT: </strong>Protein Kinase B<be>
-        <strong>ER: </strong>Estrogen Receptor
-        <strong>ATM: </strong>Ataxia Telangiectasia Mutated
-        <strong>CDK2: </strong>Cyclin-Dependent Kinase 2
-        <strong>CXCR4: </strong>C-X-C Chemokine Receptor Type 4
-        <strong>FGFR: </strong>Fibroblast Growth Factor Receptor
-        <strong>VEGFR2: </strong>Vascular Endothelial Growth Factor Receptor 2
-        <strong>BRAF: </strong>B-Raf Proto-Oncogene
-        <strong>GSK3B: </strong>Glycogen Synthase Kinase 3 Beta
-        <strong>HDAC1: </strong>Histone Deacetylase 1
-        <strong>HDAC2: </strong>Histone Deacetylase 2
-        <strong>HDAC8: </strong>Histone Deacetylase 8
-        <strong>JAK2: </strong>Janus Kinase 2
-        <strong>PARP1: </strong>Poly(ADP-ribose) Polymerase 1
-        <strong>Aromatase: </strong>Aromatase
-        <strong>mTOR: </strong>Mammalian Target of Rapamycin
-        <strong>PI3K: </strong>Phosphoinositide 3-Kinase
-        <strong>PR: </strong>Progesterone Receptor
+        <strong>HER2: </strong>Human Epidermal Growth Factor Receptor 2<br>
+        <strong>AKT: </strong>Protein Kinase B<br>
+        <strong>ER: </strong>Estrogen Receptor<br>
+        <strong>ATM: </strong>Ataxia Telangiectasia Mutated<br>
+        <strong>CDK2: </strong>Cyclin-Dependent Kinase 2<br>
+        <strong>CXCR4: </strong>C-X-C Chemokine Receptor Type 4<br>
+        <strong>FGFR: </strong>Fibroblast Growth Factor Receptor<br>
+        <strong>VEGFR2: </strong>Vascular Endothelial Growth Factor Receptor 2<br>
+        <strong>BRAF: </strong>B-Raf Proto-Oncogene<br>
+        <strong>GSK3B: </strong>Glycogen Synthase Kinase 3 Beta<br>
+        <strong>HDAC1: </strong>Histone Deacetylase 1<br>
+        <strong>HDAC2: </strong>Histone Deacetylase 2<br>
+        <strong>HDAC8: </strong>Histone Deacetylase 8<br>
+        <strong>JAK2: </strong>Janus Kinase 2<br>
+        <strong>PARP1: </strong>Poly(ADP-ribose) Polymerase 1<br>
+        <strong>Aromatase: </strong>Aromatase<br>
+        <strong>mTOR: </strong>Mammalian Target of Rapamycin<br>
+        <strong>PI3K: </strong>Phosphoinositide 3-Kinase<br>
+        <strong>PR: </strong>Progesterone Receptor<br>
         """, unsafe_allow_html=True)
         
