@@ -45,8 +45,16 @@ TARGET_MODELS = {
     'VEGFR2': "https://github.com/afolabiowoloye/Breast-Cancer-pIC50/raw/refs/heads/main/models/VEGFR2_catboost_regression_model.cbm",
     'BRAF': "https://github.com/afolabiowoloye/Breast-Cancer-pIC50/raw/refs/heads/main/models/braf_catboost_regression_model.cbm",
     'GSK3B': "https://github.com/afolabiowoloye/Breast-Cancer-pIC50/raw/refs/heads/main/models/GSK3B_catboost_regression_model.cbm",
-    'HDCA1': "https://github.com/afolabiowoloye/Breast-Cancer-pIC50/raw/refs/heads/main/models/HDAC1_catboost_regression_model.cbm",
-    'HDCA2': "https://github.com/afolabiowoloye/Breast-Cancer-pIC50/raw/refs/heads/main/models/HDAC2_catboost_regression_model.cbm",
+    'HDAC1': "https://github.com/afolabiowoloye/Breast-Cancer-pIC50/raw/refs/heads/main/models/HDAC1_catboost_regression_model.cbm",
+    'HDAC2': "https://github.com/afolabiowoloye/Breast-Cancer-pIC50/raw/refs/heads/main/models/HDAC2_catboost_regression_model.cbm",
+    'HDAC8': "https://github.com/afolabiowoloye/Breast-Cancer-pIC50/raw/refs/heads/main/models/HDAC8_catboost_regression_model.cbm",
+    'JAK2': "https://github.com/afolabiowoloye/Breast-Cancer-pIC50/raw/refs/heads/main/models/JAK2_catboost_regression_model.cbm",
+    'PARP1': "https://github.com/afolabiowoloye/Breast-Cancer-pIC50/raw/refs/heads/main/models/PARP1_catboost_regression_model.cbm",
+    'aromatase': "https://github.com/afolabiowoloye/Breast-Cancer-pIC50/raw/refs/heads/main/models/aromatase_catboost_regression_model.cbm",
+    'androgen': "https://github.com/afolabiowoloye/Breast-Cancer-pIC50/raw/refs/heads/main/models/androgen_catboost_regression_model.cbm",
+    'mTOR': "https://github.com/afolabiowoloye/Breast-Cancer-pIC50/raw/refs/heads/main/models/mTOR_catboost_regression_model.cbm",
+    'PI3K': "https://github.com/afolabiowoloye/Breast-Cancer-pIC50/raw/refs/heads/main/models/PI3K_catboost_regression_model.cbm",
+    'PR': "https://github.com/afolabiowoloye/Breast-Cancer-pIC50/raw/refs/heads/main/models/PR_catboost_regression_model.cbm",
     # Add other targets here
 }
 
