@@ -247,7 +247,7 @@ Example2,C1=CC=C(C=C1)C=O"""
         
         with st.sidebar.header("""Overview and Usage"""):
             st.sidebar.markdown("""
-            <strong>HER2: <s/trong>Human Epidermal Growth Factor Receptor 2<be>
+            <strong>HER2: </strong>Human Epidermal Growth Factor Receptor 2<be>
             <strong>AKT: </strong>Protein Kinase B<be>
             <strong>ER: </strong>Estrogen Receptor
             <strong>ATM: </strong>Ataxia Telangiectasia Mutated
