@@ -246,24 +246,24 @@ Example2,C1=CC=C(C=C1)C=O"""
 
     with st.sidebar.header("""Available Targets"""):
         st.sidebar.markdown("""
-        <strong>Aromatase: </strong>Aromatase<br>
-        <strong>JAK2: </strong>Janus Kinase 2<br>
-        <strong>AKT: </strong>Protein Kinase B<br>
-        <strong>ER: </strong>Estrogen Receptor<br>
-        <strong>PR: </strong>Progesterone Receptor<br>
-        <strong>BRAF: </strong>B-Raf Proto-Oncogene<br>
-        <strong>HDAC1: </strong>Histone Deacetylase 1<br>
-        <strong>HDAC2: </strong>Histone Deacetylase 2<br>
-        <strong>HDAC8: </strong>Histone Deacetylase 8<br>
-        <strong>CDK2: </strong>Cyclin-Dependent Kinase 2<br>
-        <strong>PI3K: </strong>Phosphoinositide 3-Kinase<br>
-        <strong>ATM: </strong>Ataxia Telangiectasia Mutated<br>
-        <strong>mTOR: </strong>Mammalian Target of Rapamycin<br>
-        <strong>PARP1: </strong>Poly(ADP-ribose) Polymerase 1<br>
-        <strong>GSK3B: </strong>Glycogen Synthase Kinase 3 Beta<br>
-        <strong>CXCR4: </strong>C-X-C Chemokine Receptor Type 4<br>
-        <strong>FGFR: </strong>Fibroblast Growth Factor Receptor<br>
-        <strong>HER2: </strong>Human Epidermal Growth Factor Receptor 2<br>
-        <strong>VEGFR2: </strong>Vascular Endothelial Growth Factor Receptor 2<br>
+        <strong>1. Aromatase: </strong>Aromatase<br>
+        <strong>2. JAK2: </strong>Janus Kinase 2<br>
+        <strong>3. AKT: </strong>Protein Kinase B<br>
+        <strong>4. ER: </strong>Estrogen Receptor<br>
+        <strong>5. PR: </strong>Progesterone Receptor<br>
+        <strong>6. BRAF: </strong>B-Raf Proto-Oncogene<br>
+        <strong>7. HDAC1: </strong>Histone Deacetylase 1<br>
+        <strong>8. HDAC2: </strong>Histone Deacetylase 2<br>
+        <strong>9. HDAC8: </strong>Histone Deacetylase 8<br>
+        <strong>10. CDK2: </strong>Cyclin-Dependent Kinase 2<br>
+        <strong>11. PI3K: </strong>Phosphoinositide 3-Kinase<br>
+        <strong>12. ATM: </strong>Ataxia Telangiectasia Mutated<br>
+        <strong>13. mTOR: </strong>Mammalian Target of Rapamycin<br>
+        <strong>14. PARP1: </strong>Poly(ADP-ribose) Polymerase 1<br>
+        <strong>15. GSK3B: </strong>Glycogen Synthase Kinase 3 Beta<br>
+        <strong>16. CXCR4: </strong>C-X-C Chemokine Receptor Type 4<br>
+        <strong>17. FGFR: </strong>Fibroblast Growth Factor Receptor<br>
+        <strong>18. HER2: </strong>Human Epidermal Growth Factor Receptor 2<br>
+        <strong>19. VEGFR2: </strong>Vascular Endothelial Growth Factor Receptor 2<br>
         """, unsafe_allow_html=True)
         
