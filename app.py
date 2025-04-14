@@ -51,7 +51,6 @@ TARGET_MODELS = {
     'JAK2': "https://github.com/afolabiowoloye/Breast-Cancer-pIC50/raw/refs/heads/main/models/JAK2_catboost_regression_model.cbm",
     'PARP1': "https://github.com/afolabiowoloye/Breast-Cancer-pIC50/raw/refs/heads/main/models/PARP1_catboost_regression_model.cbm",
     'aromatase': "https://github.com/afolabiowoloye/Breast-Cancer-pIC50/raw/refs/heads/main/models/aromatase_catboost_regression_model.cbm",
-    'androgen': "https://github.com/afolabiowoloye/Breast-Cancer-pIC50/raw/refs/heads/main/models/androgen_catboost_regression_model.cbm",
     'mTOR': "https://github.com/afolabiowoloye/Breast-Cancer-pIC50/raw/refs/heads/main/models/mTOR_catboost_regression_model.cbm",
     'PI3K': "https://github.com/afolabiowoloye/Breast-Cancer-pIC50/raw/refs/heads/main/models/PI3K_catboost_regression_model.cbm",
     'PR': "https://github.com/afolabiowoloye/Breast-Cancer-pIC50/raw/refs/heads/main/models/PR_catboost_regression_model.cbm",
