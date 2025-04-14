@@ -243,3 +243,14 @@ Example2,C1=CC=C(C=C1)C=O"""
                     
                 except Exception as e:
                     st.error(f"An error occurred during processing: {str(e)}")
+
+        
+        with st.sidebar.header("""Overview and Usage"""):
+            st.sidebar.markdown("""
+            <h4 style='color: blue;'>Brief Overview of the App</h4>
+            <h4 style='color: blue;'>How to Use the App</h4>
+            <strong>1. Select a Target:</strong> Choose one of the 20 breast cancer targets from the Home page.<be>
+            <strong>2. Input Your Compound:</strong> Upload compounds' SMILES string file.<be>
+            <strong>3. Get Predictions:</strong> Click <strong>Predict</strong> to receive the <sub>50</sub> value for your compound.<be>
+            """, unsafe_allow_html=True)
+        
