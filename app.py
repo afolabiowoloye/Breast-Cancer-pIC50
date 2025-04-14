@@ -262,7 +262,7 @@ Example2,C1=CC=C(C=C1)C=O"""
         <strong>PARP1: </strong>Poly(ADP-ribose) Polymerase 1<br>
         <strong>GSK3B: </strong>Glycogen Synthase Kinase 3 Beta<br>
         <strong>CXCR4: </strong>C-X-C Chemokine Receptor Type 4<br>
-        <strong>FGFR: </strong>Fibroblast Growth Factor Receptor<br>        
+        <strong>FGFR: </strong>Fibroblast Growth Factor Receptor<br>
         <strong>HER2: </strong>Human Epidermal Growth Factor Receptor 2<br>
         <strong>VEGFR2: </strong>Vascular Endothelial Growth Factor Receptor 2<br>
         """, unsafe_allow_html=True)
