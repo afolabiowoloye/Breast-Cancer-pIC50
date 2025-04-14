@@ -247,27 +247,24 @@ Example2,C1=CC=C(C=C1)C=O"""
         
         with st.sidebar.header("""Overview and Usage"""):
             st.sidebar.markdown("""
-            <h4 style='color: blue;'>HER2:</h4> Human Epidermal Growth Factor Receptor 2
-            AKT: Protein Kinase B
-            ER: Estrogen Receptor
-            ATM: Ataxia Telangiectasia Mutated
-            CDK2: Cyclin-Dependent Kinase 2
-            CXCR4: C-X-C Chemokine Receptor Type 4
-            FGFR: Fibroblast Growth Factor Receptor
-            VEGFR2: Vascular Endothelial Growth Factor Receptor 2
-            BRAF: B-Raf Proto-Oncogene
-            GSK3B: Glycogen Synthase Kinase 3 Beta
-            HDAC1: Histone Deacetylase 1
-            HDAC2: Histone Deacetylase 2
-            HDAC8: Histone Deacetylase 8
-            JAK2: Janus Kinase 2
-            PARP1: Poly(ADP-ribose) Polymerase 1
-            Aromatase: Aromatase
-            mTOR: Mammalian Target of Rapamycin
-            PI3K: Phosphoinositide 3-Kinase
-            PR: Progesterone Receptor
-            <strong>1. Select a Target:</strong> Choose one of the 20 breast cancer targets from the Home page.<be>
-            <strong>2. Input Your Compound:</strong> Upload compounds' SMILES string file.<be>
-            <strong>3. Get Predictions:</strong> Click <strong>Predict</strong> to receive the <sub>50</sub> value for your compound.<be>
+            <strong>HER2: <strong/>Human Epidermal Growth Factor Receptor 2<be>
+            <strong>AKT: <strong/>Protein Kinase B
+            <strong>ER: <strong/>Estrogen Receptor
+            <strong>ATM: <strong/>Ataxia Telangiectasia Mutated
+            <strong>CDK2: <strong/>Cyclin-Dependent Kinase 2
+            <strong>CXCR4: <strong/>C-X-C Chemokine Receptor Type 4
+            <strong>FGFR: <strong/>Fibroblast Growth Factor Receptor
+            <strong>VEGFR2: <strong/>Vascular Endothelial Growth Factor Receptor 2
+            <strong>BRAF: <strong/>B-Raf Proto-Oncogene
+            <strong>GSK3B: <strong/>Glycogen Synthase Kinase 3 Beta
+            <strong>HDAC1: <strong/>Histone Deacetylase 1
+            <strong>HDAC2: <strong/>Histone Deacetylase 2
+            <strong>HDAC8: <strong/>Histone Deacetylase 8
+            <strong>JAK2: <strong/>Janus Kinase 2
+            <strong>PARP1: <strong/>Poly(ADP-ribose) Polymerase 1
+            <strong>Aromatase: <strong/>Aromatase
+            <strong>mTOR: <strong/>Mammalian Target of Rapamycin
+            <strong>PI3K: <strong/>Phosphoinositide 3-Kinase
+            <strong>PR: <strong/>Progesterone Receptor
             """, unsafe_allow_html=True)
         
