@@ -244,7 +244,7 @@ Example2,C1=CC=C(C=C1)C=O"""
                 except Exception as e:
                     st.error(f"An error occurred during processing: {str(e)}")
 
-    with st.sidebar.header("""Targets"""):
+    with st.sidebar.header("""Available Targets"""):
         st.sidebar.markdown("""
         <strong>Aromatase: </strong>Aromatase<br>
         <strong>JAK2: </strong>Janus Kinase 2<br>
